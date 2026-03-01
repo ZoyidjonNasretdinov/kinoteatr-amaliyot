@@ -1,30 +1,94 @@
-body {
+/* ===== GLOBAL ===== */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
     color: white;
+    min-height: 100vh;
 }
 
+/* ===== CONTAINER ===== */
 .container {
     width: 90%;
-    margin: 40px auto;
+    margin: 60px auto;
 }
 
+/* ===== FILTER PANEL ===== */
+.filter-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 40px;
+    justify-content: center;
+}
+
+.filter-panel input,
+.filter-panel select {
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    backdrop-filter: blur(10px);
+    transition: 0.3s ease;
+    min-width: 150px;
+}
+
+.filter-panel input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.filter-panel input:focus,
+.filter-panel select:focus {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(255,75,43,0.5);
+}
+
+/* ===== GRID ===== */
 .movies {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 30px;
 }
 
-/* CARD */
+/* ===== CARD ===== */
 .card {
     position: relative;
     height: 420px;
     border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-    transition: 0.5s ease;
+    background: #111;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 22px;
+    background: linear-gradient(45deg, #ff4b2b, #ff416c, #6a11cb, #2575fc);
+    z-index: -1;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.card:hover::before {
+    opacity: 1;
+    filter: blur(18px);
 }
 
 .card img {
@@ -34,42 +98,82 @@ body {
     transition: 0.6s ease;
 }
 
-/* IMAGE ZOOM + BLUR */
 .card:hover img {
     transform: scale(1.15);
-    filter: blur(3px) brightness(0.6);
+    filter: brightness(0.6) blur(3px);
 }
 
-/* OVERLAY BASE */
+/* ===== RATING BADGE ===== */
+.rating {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ===== PLAY BUTTON ===== */
+.play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ff4b2b, #ff416c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    transition: 0.4s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+.card:hover .play-btn {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* ===== OVERLAY ===== */
 .overlay {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
+    right: 0;
     padding: 20px;
-    box-sizing: border-box;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+    transition: 0.5s;
 }
 
-/* TITLE ALWAYS VISIBLE */
 .title {
     font-size: 20px;
     font-weight: 600;
-    margin-bottom: 5px;
-    transition: 0.3s;
+    margin-bottom: 6px;
+    transition: 0.4s;
 }
 
-/* DATE */
+.card:hover .title {
+    color: #ff4b2b;
+    transform: translateY(-5px);
+}
+
 .date {
     font-size: 13px;
     opacity: 0.8;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-/* GENRES */
 .genres {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    margin-bottom: 12px;
 }
 
 .genre {
@@ -78,28 +182,53 @@ body {
     border-radius: 50px;
     font-size: 11px;
     font-weight: 500;
+    transition: 0.3s;
 }
 
-/* DESCRIPTION HIDDEN INITIALLY */
+.genre:hover {
+    transform: scale(1.1);
+}
+
 .overview {
-    position: absolute;
-    bottom: -100%;
-    left: 0;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.5;
-    transition: 0.6s cubic-bezier(.77,0,.18,1);
+    height: 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.5s ease, height 0.3s linear;
+
 }
 
-/* HOVER REVEAL */
 .card:hover .overview {
-    bottom: 0;
+    height: 100%;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* Optional Glow Effect */
-.card:hover {
-    box-shadow: 0 25px 60px rgba(255, 75, 43, 0.4);
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .card {
+        height: 380px;
+    }
+
+    .filter-panel {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .movies {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-panel {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .filter-panel input,
+    .filter-panel select {
+        width: 100%;
+        max-width: 300px;
+    }
 }
