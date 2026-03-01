@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Movie Cards</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- FILTER PANEL -->
+    <div class="filter-panel">
+        <input type="text" id="searchInput" placeholder="Search movie..." />
+
+        <select id="genreFilter">
+            <option value="all">All Genres</option>
+        </select>
+
+        <select id="yearFilter">
+            <option value="all">All Years</option>
+        </select>
+    </div>
+
+    <div class="movies" id="movies"></div>
+</div>
+
+<script src="./movies.js"></script>
+<script>
+const moviesContainer = document.getElementById("movies");
+const genreFilter = document.getElementById("genreFilter");
+const yearFilter = document.getElementById("yearFilter");
+const searchInput = document.getElementById("searchInput");
+
+/* ---------- UNIQUE GENRES & YEARS ---------- */
+
+const allGenres = new Set();
+const allYears = new Set();
+
+films.forEach(movie => {
+    movie.genres.forEach(g => allGenres.add(g));
+    const year = new Date(movie.release_date * 1000).getFullYear();
+    allYears.add(year);
+});
+
+/* ---------- FILL GENRE OPTIONS ---------- */
+allGenres.forEach(genre => {
+    const option = document.createElement("option");
+    option.value = genre;
+    option.textContent = genre;
+    genreFilter.appendChild(option);
+});
+
+/* ---------- FILL YEAR OPTIONS ---------- */
+[...allYears].sort((a,b) => b-a).forEach(year => {
+    const option = document.createElement("option");
+    option.value = year;
+    option.textContent = year;
+    yearFilter.appendChild(option);
+});
+
+/* ---------- RENDER FUNCTION ---------- */
+
+function renderMovies(filteredMovies) {
+    moviesContainer.innerHTML = "";
+
+    if (filteredMovies.length === 0) {
+        moviesContainer.innerHTML = "<h2>No movies found 😢</h2>";
+        return;
+    }
+
+    filteredMovies.forEach(movie => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const date = new Date(movie.release_date * 1000).toLocaleDateString();
+
+        card.innerHTML = `
+            <img src="${movie.poster}" alt="${movie.title}">
+            <div class="overlay">
+                <div class="title">${movie.title}</div>
+                <div class="date">Published : ${date}</div>
+                <div class="genres">
+                    ${movie.genres.map(g => `<span class="genre">${g}</span>`).join("")}
+                </div>
+                <div class="overview">${movie.overview}</div>
+            </div>
+        `;
+
+        moviesContainer.appendChild(card);
+    });
+}
+
+/* ---------- FILTER FUNCTION ---------- */
+
+function filterMovies() {
+    const selectedGenre = genreFilter.value;
+    const selectedYear = yearFilter.value;
+    const searchText = searchInput.value.toLowerCase();
+
+    const filtered = films.filter(movie => {
+        const movieYear = new Date(movie.release_date * 1000).getFullYear();
+
+        const matchGenre =
+            selectedGenre === "all" || movie.genres.includes(selectedGenre);
+
+        const matchYear =
+            selectedYear === "all" || movieYear == selectedYear;
+
+        const matchSearch =
+            movie.title.toLowerCase().includes(searchText);
+
+        return matchGenre && matchYear && matchSearch;
+    });
+
+    renderMovies(filtered);
+}
+
+/* ---------- EVENTS ---------- */
+genreFilter.addEventListener("change", filterMovies);
+yearFilter.addEventListener("change", filterMovies);
+searchInput.addEventListener("input", filterMovies);
+
+/* ---------- INITIAL RENDER ---------- */
+renderMovies(films);
+
+</script>
+
+</body>
+</html>

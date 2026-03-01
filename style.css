@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: white;
+}
+
+.container {
+    width: 90%;
+    margin: 40px auto;
+}
+
+/* FILTER PANEL */
+.filter-panel {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.filter-panel input,
+.filter-panel select {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+/* MOVIE GRID */
+.movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+/* CARD */
+.card {
+    position: relative;
+    height: 420px;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+    transition: 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    padding: 20px;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.date {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.genres {
+    margin: 10px 0;
+}
+
+.genre {
+    background: #ff4b2b;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 11px;
+    margin-right: 5px;
+}
+
+.overview {
+    font-size: 13px;
+    opacity: 0.8;
+}
